@@ -1,0 +1,70 @@
+<!-- Webcam video element -->
+<video id="video" autoplay></video>
+
+<!-- Canvas element for drawing the image -->
+<canvas id="canvas" style="display: none;"></canvas>
+
+<!-- Hidden input field for holding the image data -->
+<input type="hidden" id="student_image" name="student_image">
+
+<!-- Button for capturing the image -->
+<button type="button" class="btn btn-primary" id="capture-button" onclick="capture()">Capture</button>
+
+<!-- Button for submitting the image to the backend -->
+<button type="button" class="btn btn-primary" id="submit-button" onclick="submit()">Submit</button>
+
+
+<script>
+  // Get the video element
+var video = document.getElementById('video');
+
+// Get the canvas element
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+
+// Check if the browser supports the getUserMedia API
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  // Get the webcam stream
+  navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+    // Attach the webcam stream to the video element
+    video.srcObject = stream;
+  });
+}
+
+// Function for capturing the image from the webcam
+function capture() {
+  // Set the canvas dimensions to the same as the video
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  // Draw the current frame of the video onto the canvas
+  context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+  // Get the image data from the canvas
+  var imageData = canvas.toDataURL('image/jpeg');
+
+  // Set the value of the hidden input field
+  document.getElementById('student_image').value = imageData;
+}
+
+// Function for submitting the image to the backend
+function submit() {
+  // Get the data URL of the image
+  var imageData = document.getElementById('student_image').value;
+
+  // Create a form data object to hold the image data
+  var formData = new FormData();
+
+  // Append the image data to the form data object
+  formData.append('student_image', imageData);
+
+  // Send a POST request to the backend with the form data as the request body
+  fetch('/t', {
+    method: 'POST',
+    body: formData
+  }).then(function(response) {
+    // Do something with the response, such as displaying a message
+    alert('Image uploaded successfully!');
+  });
+}
+</script>

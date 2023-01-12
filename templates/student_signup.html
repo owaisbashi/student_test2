@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- in the head section of your HTML template -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<!-- at the end of the body section of your HTML template -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.16.0/dist/umd/popper.min.js" integrity="sha384-q3LWZlhJ7VUDYlLgPFkmW8nENlzpa1+ljjikgZbUVQSGy+8l1WjKlhw7CsBpC6R" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+          <div class="col-md-6 offset-md-3">
+            <h2>Sign Up</h2>
+
+            <!-- Video element to display the webcam stream -->
+<!-- <video id="webcam" autoplay></video> -->
+
+<!-- Button to capture an image from the webcam -->
+<!-- <button id="capture">Capture</button> -->
+
+<!-- Canvas element to display the captured image -->
+<!-- <canvas id="canvas"  style="display: none;"></canvas> -->
+
+<!-- Hidden input field for storing the image data -->
+<!-- <input type="hidden" id="student_image" name="student_image"> -->
+
+            <p>Please fill in this form to create an account.</p>
+            <form action="/signup" method="post" enctype="multipart/form-data">
+                  <div class="form-group">
+                    <label for="student_name">Student Name</label>
+                    <input type="text" class="form-control" id="student_name" name="student_name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="student_email">Student Email</label>
+                    <input type="email" class="form-control" id="student_email" name="student_email" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="student_password">Student Password</label>
+                    <input type="password" class="form-control" id="student_password" name="student_password" required>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label for="student_image">Student Image</label>
+                    <input type="file" class="form-control-file" id="student_image" name="student_image" required>
+<!- <div class="form-group"> -->
+
+<!-- </div> -->
+
+                  <!-- </div> --> 
+
+
+
+                  <div class="form-group">
+                    <video id="stream" width="370" height="320">
+                        <canvas id="capture" width="370" height="320">
+                        </canvas>
+                      </video>
+                      <br>
+                        <button id="btn-capture" type="button" class="btn btn-primary justify-content-center">Capture Image</button>
+                    <br><br>
+                        <div id="snapshot"></div>
+                    <input type="hidden" id="image_hidden" name="image_hidden">
+                    </div>
+
+                    
+                  <div class="form-group">
+                    <label for="student_age">Student Age</label>
+                    <input type="number" class="form-control" id="student_age" name="student_age" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="student_course">Student Course</label>
+                    <input type="text" class="form-control" id="student_course" name="student_course" required>
+                  </div>
+       
+                  <!-- <button type="button" class="btn btn-primary" id="capture-button" onclick="capture()">Capture</button> -->
+                  <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+      <script>
+        // The buttons to start & stop stream and to capture the image
+        //var btnStart = document.getElementById( "btn-start" );
+        //var btnStop = document.getElementById( "btn-stop" );
+        var btnCapture = document.getElementById( "btn-capture" );
+    
+        // The stream & capture
+        var stream = document.getElementById( "stream" );
+        var capture = document.getElementById( "capture" );
+        var snapshot = document.getElementById( "snapshot" );
+        
+        // The video stream
+        var cameraStream = null;
+        
+        btnCapture.addEventListener( "click", captureSnapshot );
+    
+        // Attach listeners
+        
+        // Start Streaming
+        function startStreaming() {
+        
+          var mediaSupport = 'mediaDevices' in navigator;
+        
+          if( mediaSupport && null == cameraStream ) {
+        
+            navigator.mediaDevices.getUserMedia( { video: true } )
+            .then( function( mediaStream ) {
+        
+              cameraStream = mediaStream;
+        
+              stream.srcObject = mediaStream;
+        
+              stream.play();
+            })
+            .catch( function( err ) {
+        
+              console.log( "Unable to access camera: " + err );
+            });
+          }
+          else {
+        
+            alert( 'Your browser does not support media devices.' );
+        
+            return;
+          }
+        }
+        
+        // Stop Streaming
+        function stopStreaming() {
+        
+          if( null != cameraStream ) {
+        
+            var track = cameraStream.getTracks()[ 0 ];
+        
+            track.stop();
+            stream.load();
+        
+            cameraStream = null;
+          }
+        }
+        
+        function captureSnapshot() {
+        
+          if( null != cameraStream ) {
+        
+            var ctx = capture.getContext( '2d' );
+            var img = new Image();
+        
+            ctx.drawImage( stream, 0, 0, capture.width, capture.height );
+          
+            img.src		= capture.toDataURL( "image/png" );
+            img.width	= 370;
+            img.height	= 320;
+            //console.log(capture.toDataURL( "image/png" ));
+            snapshot.innerHTML = '';
+        
+            snapshot.appendChild( img );
+            var d1 = capture.toDataURL("image/png");
+            var res = d1.replace("data:image/png;base64,", "");
+            console.log(res);
+            snapshot.innerHTML = '';
+            snapshot.appendChild( img );
+            $("#image_hidden").val(res)    
+    
+          }
+        }
+        window.onload = function() {
+           startStreaming();
+           captureSnapshot();
+        }
+        
+        </script>
+ 
+      
+
+      <!-- <script>
+        // Get the video and canvas elements
+       
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('image');
+        const ctx = canvas.getContext('2d');
+
+        // Set the canvas dimensions to the same as the video
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+      
+        // Get the webcam stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(stream => {
+            // Set the video element's src to the stream
+            video.srcObject = stream;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      
+        // Capture an image from the webcam when the capture button is clicked
+        document.getElementById('capture').addEventListener('click', () => {
+          // Draw the current frame of the webcam stream onto the canvas
+          ctx.drawImage(video, 0, 0);
+        });
+
+     function capture() {
+  // Get the video element
+  var video = document.getElementById('video');
+
+  // Get the canvas element
+  var canvas = document.getElementById('canvas');
+  var context = canvas.getContext('2d');
+
+  // Set the canvas dimensions to the same as the video
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  // Draw the current frame of the video onto the canvas
+  context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+  // Get the image data from the canvas
+  var imageData = canvas.toDataURL('image/jpeg');
+
+  // Set the value of the hidden input field
+  document.getElementById('student_image').value = imageData;
+
+  // Get the additional student details
+  var student_id = document.getElementById('student_id').value;
+  var student_name = document.getElementById('student_name').value;
+  var student_email = document.getElementById('student_email').value;
+
+  // Send the student details to the backend using an AJAX request
+  $.ajax({
+    type: 'POST',
+    url: '/upload',
+    data: {
+      student_id: student_id,
+      student_name: student_name,
+      student_email: student_email,
+      student_image: imageData
+    },
+    success: function(response) {
+      console.log(response);
+    }
+  });
+} 
+      
+      </script> -->
+</body>
+
+</html>

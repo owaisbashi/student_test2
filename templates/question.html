@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<title>Title</title>
+</head>
+<body>
+    <style>
+        .student-info {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+.next{
+  display: inline-block;
+  margin-left: 250px;
+}
+    </style>
+    <div class="container mt-5">
+        <h2 id="question">{{question}}</h2>
+
+        <div class="student-info">
+            <img src="/path/to/student/photo" alt="Student Photo">
+            <h2>Student Name</h2>
+          </div>
+        <form action="/marks" enctype="multipart/form-data">
+<br>
+          <!-- {% for choice in choices %}
+          <div class="form-check">
+            <input type="radio" id="{{choice}}" name="{{choice}}" value="{{choice}}">
+        <label for="{{choice}}">{{choice}}</label>
+          
+          </div>
+          
+          {% endfor %} -->
+
+
+
+          <div>
+            <input type="radio" id="choice1" name="answer" value="{{ choices [0]}}">
+            <label for="choice1">{{ choices [0]}}</label>
+            <br>
+            <input type="radio" id="choice2" name="answer" value="{{ choices [1]}}">
+            <label for="choice2">{{ choices [1]}}</label>
+            <br>
+            <input type="radio" id="choice3" name="answer" value="{{ choices [2]}}">
+            <label for="choice3">{{ choices [2]}}</label>
+            <br>
+            <input type="radio" id="choice4" name="answer" value="{{ choices [3]}}">
+            <label for="choice4">{{ choices [3]}}</label>
+        </div>
+<br>
+          <div>
+            <a href="{{url_for('callnextquestion')}}" onclick="getSelectedValue()" class="btn btn-primary next">Next</a>
+         
+            <a  href="" class="btn btn-danger button">End Test</a>
+        </div>
+
+
+
+          <!-- <div class="form-check">
+            <input class="form-check-input" type="radio" name="choice" id="choice2" value="option2">
+            <label class="form-check-label" for="choice2">
+              Choice 2
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="choice" id="choice3" value="option3">
+            <label class="form-check-label" for="choice3">
+              Choice 3
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="choice" id="choice4" value="option4">
+            <label class="form-check-label" for="choice4">
+              Choice 4
+            </label>
+          </div>
+          <div class="btn-group mt-3" role="group">
+            <button type="button" class="btn btn-secondary">Previous</button>
+            <button type="button" class="btn btn-primary">Next</button>
+          </div> -->
+        </form>
+      </div>
+
+
+
+      <script>
+        function getSelectedValue() {
+            let selectedValue;
+            const radioButtons = document.getElementsByName("answer");
+            const question=document.getElementById("question");
+            const h2Text = question.textContent;
+            for (let i = 0; i < radioButtons.length; i++) {
+                if (radioButtons[i].checked) {
+                    selectedValue = radioButtons[i].value;
+                    break;
+                }
+            }
+            alert(selectedValue,h2Text);
+            sendValueToServer(selectedValue,h2Text);
+        }
+
+
+        async function sendValueToServer(value,question) {
+    const response = await fetch('/your-route-url', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({value: value,question:question})
+    });
+
+    if (response.ok) {
+        console.log("value sent successfully");
+    } else {
+        console.log("error occured");
+    }
+}
+    </script>
+      
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

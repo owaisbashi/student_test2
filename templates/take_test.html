@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="Description" content="Enter your description here"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<title>Title</title>
+</head>
+<body>
+<!-- Student dashboard -->
+<style>
+    /* Add some style to the dashboard */
+    h1{
+        margin-left: 200px;
+    }
+    .dashboard {
+      display: flex;
+    }
+    .sidebar {
+      width: 200px;
+      margin-right: 16px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      /* padding-top: 100px; */
+      margin-top: 100px;
+    }
+    .sidebar a {
+      display: block;
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      padding: 8px 16px;
+    }
+    .sidebar a:hover {
+      background-color: #eee;
+     
+    }
+    .student-info {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .student-info img {
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+    }
+    .student-info h2 {
+      margin: 0 16px;
+      font-size: 20px;
+    }
+    .main-content {
+      flex: 1;
+    }
+  </style>
+  
+  <div class="dashboard">
+    <div class="sidebar">
+      <a href="{{ url_for('taketest') }}">Take Exam</a>
+      <a href="/view-results">View Results</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="main-content">
+      <div class="student-info">
+        <!-- <h1>{{studen}}</h1> -->
+       
+        <img src="{{image}}" width="30px" height="20px"    alt="Student Photo">
+        <h2>{{student_name}}</h2>
+        
+      </div>
+      <h1>Student Test Dashboard</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <!-- 1 of 2 -->
+      </div>
+      <div class="col">
+        <!-- 2 of 2 -->
+      </div>
+    </div>
+    <!-- test div -->
+    {% for student_test in student_tests %}
+    <div class="row">
+      <div class="col">
+       
+      </div>
+      <div class="col">
+        {{student_test.test_name}} 
+      </div>
+      <div class="col">
+        
+            
+        <a class="btn btn-primary" href="{{ url_for('test',test_id=student_test.test_id) }}"> Take Test</a>
+
+            
+        
+
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+
+ 
+      
+  </div>
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>
